@@ -1,30 +1,43 @@
+import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import axios from '../axios';
+
 import { Post } from '../components/Post';
 import { Index } from '../components/AddComment';
 import { CommentsBlock } from '../components/CommentsBlock';
 
 export const PostPage = () => {
+    const [data, setData] = useState();
+    const [isLoading, setIsLoading] = useState(true);
+    const { id } = useParams();
+
+    useEffect(() => {
+        axios
+            .get(`/posts/${id}`)
+            .then((res) => {
+                setData(res.data);
+                setIsLoading(false);
+            })
+            .catch((err) => console.warn(err));
+    }, [id]);
+
+    if (isLoading) {
+        return <Post isLoading={isLoading} isFullPost />;
+    }
+
     return (
         <>
             <Post
-                id={1}
-                title='My post #1 | Mauris arcu dapibus'
-                imageUrl='https://res.cloudinary.com/practicaldev/image/fetch/s--UnAfrEG8--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://dev-to-uploads.s3.amazonaws.com/uploads/articles/icohm5g0axh9wjmu4oc3.png'
-                user={{
-                    avatarUrl:
-                        'https://res.cloudinary.com/practicaldev/image/fetch/s--uigxYVRB--/c_fill,f_auto,fl_progressive,h_50,q_auto,w_50/https://dev-to-uploads.s3.amazonaws.com/uploads/user/profile_image/187971/a5359a24-b652-46be-8898-2c5df32aa6e0.png',
-                    fullName: 'Keff',
-                }}
-                createdAt={'12 june 2022'}
-                viewsCount={150}
+                id={data._id}
+                title={data.title}
+                imageUrl='https://cdn.pixabay.com/photo/2023/10/27/23/10/mountain-8346389_1280.jpg'
+                user={data.user}
+                createdAt={data.createdAt}
+                viewsCount={data.viewsCount}
                 commentsCount={3}
-                tags={['react', 'fun', 'typescript']}
+                tags={data.tags}
                 isFullPost>
-                <p>
-                    Mauris arcu dapibus justo tortor, molestie sodales integer elit. Luctus mauris habitasse velit
-                    sapien et in leo, est. Nisi hac in ut. In lectus dictumst. Mattis arcu amet morbi sed integer et
-                    lectus vitae eleifend mattis tempus luctus lacinia eleifend nunc mattis nec faucibus. Sodales amet
-                    tempus risus ex. Amet vulputate dui ut.
-                </p>
+                <p>{data.text}</p>
             </Post>
             <CommentsBlock
                 items={[
