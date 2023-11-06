@@ -12,6 +12,7 @@ import { fetchPosts, fetchTags } from '../store/slices/posts';
 
 export const Home = () => {
     const dispatch = useDispatch();
+    const userData = useSelector((state) => state.auth.data);
     const { posts, tags } = useSelector((state) => state.posts);
 
     const isPostLoading = posts.status === 'loadind';
@@ -22,6 +23,7 @@ export const Home = () => {
         dispatch(fetchTags());
     }, [dispatch]);
 
+    console.log(userData?._id, posts);
     return (
         <>
             <Tabs style={{ marginBottom: 15 }} value={0} aria-label='basic tabs example'>
@@ -44,7 +46,7 @@ export const Home = () => {
                                 viewsCount={obj.viewsCount}
                                 commentsCount={3}
                                 tags={obj.tags}
-                                isEditable
+                                isEditable={userData?.userData?._id === obj.user?._id}
                             />
                         ),
                     )}

@@ -16,7 +16,6 @@ export const Login = () => {
     const {
         register,
         handleSubmit,
-        setError,
         formState: { errors, isValid },
     } = useForm({
         defaultValues: {
@@ -45,7 +44,7 @@ export const Login = () => {
     return (
         <Paper classes={{ root: styles.root }}>
             <Typography classes={{ root: styles.title }} variant='h5'>
-                login to Account
+                Login to Account
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <TextField
@@ -66,7 +65,7 @@ export const Login = () => {
                     {...register('password', { required: 'Enter password' })}
                     fullWidth
                 />
-                <Button type='submit' size='large' variant='contained' fullWidth>
+                <Button disabled={!isValid} type='submit' size='large' variant='contained' fullWidth>
                     Log in
                 </Button>
             </form>
