@@ -1,16 +1,16 @@
 import { Routes, Route } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 
 import Container from '@mui/material/Container';
 
 import { Header } from './components/Header/index';
 import { Home, PostPage, Registration, AddNewPost, Login } from './pages';
-import { fetchAuthMe, userIsAuth } from './store/slices/auth';
+import { fetchAuthMe } from './store/slices/auth';
 
 function App() {
     const dispatch = useDispatch();
-    const isAuth = useSelector(userIsAuth);
+    // const isAuth = useSelector(userIsAuth);
 
     useEffect(() => {
         dispatch(fetchAuthMe());

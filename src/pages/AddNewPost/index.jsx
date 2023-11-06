@@ -2,7 +2,7 @@ import styles from './AddNewPost.module.scss';
 
 import { useState, useCallback, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
@@ -15,11 +15,13 @@ import { userIsAuth } from '../../store/slices/auth';
 import axios from '../../axios';
 
 export const AddNewPost = () => {
+    const navigate = useNavigate();
     const isAuth = useSelector(userIsAuth);
 
-    const [value, setValue] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [text, setText] = useState('');
     const [title, setTitle] = useState('');
-    const [tags, setTags] = useState('');
+    const [tags, setTags] = useState([]);
     const [imageUrl, setImageUrl] = useState('');
     const inputFileRef = useRef(null);
 
@@ -36,10 +38,29 @@ export const AddNewPost = () => {
         }
     };
 
-    const onClickRemoveImage = () => {};
+    const onClickRemoveImage = () => {
+        setImageUrl('');
+    };
+
+    const onSubmit = async () => {
+        try {
+            setIsLoading(true);
+
+            const fields = { title, text, tags: tags.split(','), imageUrl };
+
+            const { data } = await axios.post('/posts', fields);
+
+            const id = data._id;
+
+            navigate(`/posts/${id}`);
+        } catch (error) {
+            console.warn(error);
+            alert('Failed submit!');
+        }
+    };
 
     const onChange = useCallback((value) => {
-        setValue(value);
+        setText(value);
     }, []);
 
     const options = useMemo(
@@ -93,9 +114,9 @@ export const AddNewPost = () => {
                 onChange={(e) => setTags(e.target.value)}
                 fullWidth
             />
-            <SimpleMDE className={styles.editor} value={value} onChange={onChange} options={options} />
+            <SimpleMDE className={styles.editor} value={text} onChange={onChange} options={options} />
             <div className={styles.buttons}>
-                <Button size='large' variant='contained'>
+                <Button onClick={onSubmit} size='large' variant='contained'>
                     Publish
                 </Button>
                 <a href='/'>

@@ -23,7 +23,6 @@ export const Home = () => {
         dispatch(fetchTags());
     }, [dispatch]);
 
-    console.log(userData?._id, posts);
     return (
         <>
             <Tabs style={{ marginBottom: 15 }} value={0} aria-label='basic tabs example'>
@@ -40,7 +39,7 @@ export const Home = () => {
                                 key={ind}
                                 id={obj._id}
                                 title={obj.title}
-                                imageUrl='https://cdn.pixabay.com/photo/2023/10/27/23/10/mountain-8346389_1280.jpg'
+                                imageUrl={obj.imageUrl ? `http://localhost:4444${obj.imageUrl}` : ''}
                                 user={obj.user}
                                 createdAt={obj.createdAt}
                                 viewsCount={obj.viewsCount}

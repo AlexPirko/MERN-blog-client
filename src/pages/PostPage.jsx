@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 import axios from '../axios';
 
 import { Post } from '../components/Post';
@@ -30,14 +31,14 @@ export const PostPage = () => {
             <Post
                 id={data._id}
                 title={data.title}
-                imageUrl='https://cdn.pixabay.com/photo/2023/10/27/23/10/mountain-8346389_1280.jpg'
+                imageUrl={`http://localhost:4444${data.imageUrl}`}
                 user={data.user}
                 createdAt={data.createdAt}
                 viewsCount={data.viewsCount}
                 commentsCount={3}
                 tags={data.tags}
                 isFullPost>
-                <p>{data.text}</p>
+                <ReactMarkdown children={data.text} />
             </Post>
             <CommentsBlock
                 items={[
