@@ -13,8 +13,8 @@ export const TagsBlock = ({ items, isLoading }) => {
         <SideBlock title='Tags'>
             <List>
                 {items.map((name, ind) => (
-                    <a style={{ textDecoration: 'none', color: 'black' }} href={`/tags/${name}`}>
-                        <ListItem key={ind} disablePadding>
+                    <a key={ind} style={{ textDecoration: 'none', color: 'black' }} href={`/tags/${name}`}>
+                        <ListItem disablePadding>
                             <ListItemButton>
                                 <ListItemIcon>
                                     <TagIcon />
