@@ -11,7 +11,7 @@ export const Index = () => {
                 <Avatar classes={{ root: styles.avatar }} src='https://mui.com/static/images/avatar/5.jpg' />
                 <div className={styles.form}>
                     <TextField label='Leave your comment' variant='outlined' maxRows={10} multiline fullWidth />
-                    <Button variant='contained'>Отправить</Button>
+                    <Button variant='contained'>Publish</Button>
                 </div>
             </div>
         </>

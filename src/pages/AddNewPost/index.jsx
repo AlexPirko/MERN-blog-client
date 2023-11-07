@@ -1,8 +1,8 @@
 import styles from './AddNewPost.module.scss';
 
-import { useState, useCallback, useMemo, useRef } from 'react';
+import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
@@ -15,15 +15,19 @@ import { userIsAuth } from '../../store/slices/auth';
 import axios from '../../axios';
 
 export const AddNewPost = () => {
+    const { id } = useParams();
     const navigate = useNavigate();
     const isAuth = useSelector(userIsAuth);
 
+    // eslint-disable-next-line no-unused-vars
     const [isLoading, setIsLoading] = useState(false);
     const [text, setText] = useState('');
     const [title, setTitle] = useState('');
     const [tags, setTags] = useState([]);
     const [imageUrl, setImageUrl] = useState('');
     const inputFileRef = useRef(null);
+
+    const isEditing = Boolean(id);
 
     const handleChangeFile = async (e) => {
         try {
@@ -46,13 +50,15 @@ export const AddNewPost = () => {
         try {
             setIsLoading(true);
 
-            const fields = { title, text, tags: tags.split(','), imageUrl };
+            console.log(id);
 
-            const { data } = await axios.post('/posts', fields);
+            const fields = { title, text, tags, imageUrl };
 
-            const id = data._id;
+            const { data } = isEditing ? await axios.patch(`/posts/${id}`, fields) : await axios.post('/posts', fields);
 
-            navigate(`/posts/${id}`);
+            const _id = isEditing ? id : data._id;
+
+            navigate(`/posts/${_id}`);
         } catch (error) {
             console.warn(error);
             alert('Failed submit!');
@@ -62,6 +68,23 @@ export const AddNewPost = () => {
     const onChange = useCallback((value) => {
         setText(value);
     }, []);
+
+    useEffect(() => {
+        if (id) {
+            axios
+                .get(`/posts/${id}`)
+                .then(({ data }) => {
+                    setTitle(data.title);
+                    setText(data.text);
+                    setTags(data.tags);
+                    setImageUrl(data.imageUrl);
+                })
+                .catch((err) => {
+                    console.warn(err);
+                    alert('Post not found!');
+                });
+        }
+    }, [id]);
 
     const options = useMemo(
         () => ({
@@ -117,7 +140,7 @@ export const AddNewPost = () => {
             <SimpleMDE className={styles.editor} value={text} onChange={onChange} options={options} />
             <div className={styles.buttons}>
                 <Button onClick={onSubmit} size='large' variant='contained'>
-                    Publish
+                    {!isEditing ? 'Publish' : 'Save'}
                 </Button>
                 <a href='/'>
                     <Button size='large'>Cancel</Button>
