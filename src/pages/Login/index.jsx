@@ -30,13 +30,14 @@ export const Login = () => {
     }
 
     const onSubmit = async (values) => {
-        const data = await dispatch(fetchUserData(values));
+        const data = dispatch(fetchUserData(values));
+        console.log(data.payload);
 
         if (!data.payload) {
             alert('Authorization failed');
         }
 
-        if ('token' in data.payload) {
+        if (data.payload && data.payload.includes('token')) {
             window.localStorage.setItem('token', data.payload.token);
         }
     };
@@ -65,7 +66,12 @@ export const Login = () => {
                     {...register('password', { required: 'Enter password' })}
                     fullWidth
                 />
-                <Button disabled={!isValid} type='submit' size='large' variant='contained' fullWidth>
+                <Button
+                    disabled={!isValid}
+                    type='submit'
+                    size='large'
+                    variant='contained'
+                    fullWidth>
                     Log in
                 </Button>
             </form>

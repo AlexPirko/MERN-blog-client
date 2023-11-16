@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import axios from '../axios';
+import { format } from 'date-fns';
 
 import { Post } from '../components/Post';
 import { Index } from '../components/AddComment';
@@ -33,7 +34,7 @@ export const PostPage = () => {
                 title={data.title}
                 imageUrl={`${process.env.REACT_APP_API_URL}${data.imageUrl}`}
                 user={data.user}
-                createdAt={data.createdAt}
+                createdAt={format(new Date(data.createdAt), 'MMMM do, yyyy')}
                 viewsCount={data.viewsCount}
                 commentsCount={3}
                 tags={data.tags}
@@ -45,14 +46,16 @@ export const PostPage = () => {
                     {
                         user: {
                             fullName: 'John Johnson',
-                            avatarUrl: 'https://mui.com/static/images/avatar/1.jpg',
+                            avatarUrl:
+                                'https://mui.com/static/images/avatar/1.jpg',
                         },
                         text: 'Tempus sit consectetur platea nec libero, in lectus dui mattis leo, ipsum malesuada lectus integer lorem arcu lectus mauris non dictum tempus',
                     },
                     {
                         user: {
                             fullName: 'Jack Jackson',
-                            avatarUrl: 'https://mui.com/static/images/avatar/2.jpg',
+                            avatarUrl:
+                                'https://mui.com/static/images/avatar/2.jpg',
                         },
                         text: 'Nisi hac in ut. In lectus dictumst. Mattis arcu amet morbi sed integer et lectus vitae eleifend mattis tempus luctus lacinia eleifend nunc mattis nec faucibus. Sodales amet tempus risus ex',
                     },
